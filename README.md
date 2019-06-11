@@ -2,7 +2,7 @@
 My test for the back-end internship at Pipz Automation
 
 ## Getting Started
-Initially I recommend that you create an isolated environment using virtualenv, to install and create an isolated environment, use the [documentation](https://virtualenv.pypa.io/en/latest/)
+Initially I recommend that you create an isolated environment using virtualenv. To install and create an isolated environment, use the [documentation](https://virtualenv.pypa.io/en/latest/)
 
 Once inside the virtual environment, clone the repository using the command below:
 ```
