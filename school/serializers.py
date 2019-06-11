@@ -33,14 +33,38 @@ class LoginSerializer(serializers.Serializer):
 
 
 class TeacherSerializer(serializers.Serializer):
-    class Meta:
-        model = Teacher
-        fields = ('id', 'name')
+    pk = serializers.IntegerField(read_only=True)
+    name = serializers.CharField(max_length=60)
 
+    def create(self, validated_data):
+        """
+        Create and return a new 'Teacher' instance
+        """
+        return Teacher.objects.create(**validated_data)
 
-class StudentSerializer(serializers.ModelSerializer):
-    teacher = TeacherSerializer(many=False, read_only=True)
+    def update(self, instance, validated_data):
+        """
+        Update and return an existing 'Teacher' instance
+        """
+        instance.name = validated_data.get('name', instance.name)
+        instance.save()
+        return instance
 
-    class Meta:
-        model = Student
-        fields = ('id', 'name', 'teacher')
+class StudentSerializer(serializers.Serializer):
+    pk = serializers.IntegerField(read_only=True)
+    name = serializers.CharField(max_length=60)
+    teacher = TeacherSerializer(many=False, read_only=False)
+
+    def create(self, validated_data):
+        """
+        Create and return a new 'Student' instance
+        """
+        return Student.objects.create(**validated_data)
+
+    def update(self, instance, validated_data):
+        """
+        Update and return an existing 'Student' instance
+        """
+        instance.name = validated_data.get('name', instance.name)
+        instance.save()
+        return instance
