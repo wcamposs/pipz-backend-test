@@ -20,5 +20,3 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     re_path('school/', include('school.urls')),
 ]
-
-#(?P<version>(v1|v2))/

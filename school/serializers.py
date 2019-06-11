@@ -53,8 +53,8 @@ class TeacherSerializer(serializers.Serializer):
 class StudentSerializer(serializers.Serializer):
     pk = serializers.IntegerField(read_only=True)
     name = serializers.CharField(max_length=60)
-    teacher = TeacherSerializer(many=False)
-
+    teacher = TeacherSerializer(many=False, required=True)
+    
     def create(self, validated_data):
         """
         Create and return a new 'Student' instance
@@ -66,6 +66,5 @@ class StudentSerializer(serializers.Serializer):
         Update and return an existing 'Student' instance
         """
         instance.name = validated_data.get('name', instance.name)
-        instance.teacher = validated_data.get('teacher', instance.teacher)
         instance.save()
         return instance
