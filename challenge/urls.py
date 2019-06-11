@@ -18,5 +18,7 @@ from django.urls import path, re_path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    re_path('school/(?P<version>(v1|v2))/', include('school.urls')),
+    re_path('school/', include('school.urls')),
 ]
+
+#(?P<version>(v1|v2))/
