@@ -1,5 +1,6 @@
 from django.contrib.auth import login as django_login, logout as django_logout
-#from django.http import Http404
+from django.http import Http404
+from django.views.decorators.csrf import csrf_exempt
 
 from rest_framework import generics
 from rest_framework.views import APIView
@@ -7,13 +8,13 @@ from rest_framework.authtoken.models import Token
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication, TokenAuthentication
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.response import Response
-#from rest_framework import status
+from rest_framework import status
 
 from .models import Student, Teacher
 from .serializers import StudentSerializer, StudentResponseSerializer, TeacherSerializer, LoginSerializer
 
-# Create your views here.
 
+# Create your views here.
 class LoginView(APIView):
     def post(self, request):
         serializer = LoginSerializer(data=request.data)
@@ -54,6 +55,7 @@ class ListStudentView(generics.ListCreateAPIView):
     queryset = Student.objects.all()
     serializer_class = StudentResponseSerializer
 
+    @csrf_exempt
     def create(self, *args, **kwargs):
         self.serializer_class = StudentSerializer
         return generics.ListCreateAPIView.create(self, *args, **kwargs)
@@ -62,9 +64,19 @@ class TeacherDetail(generics.RetrieveUpdateDestroyAPIView):
     """
     Retrieve, update or delete a 'Teacher' instance
     """
+    authentication_classes = (TokenAuthentication, SessionAuthentication, BasicAuthentication)
+    permission_classes = (IsAuthenticated, IsAdminUser)
+
     queryset = Teacher.objects.all()
     serializer_class = TeacherSerializer
     
+    def destroy(self, request, *args, **kwargs):
+        try:
+            instance = self.get_object()
+            self.perform_destroy(instance)
+        except Http404:
+            pass
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 class StudentDetail(generics.RetrieveUpdateDestroyAPIView):
     """
@@ -74,6 +86,16 @@ class StudentDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Student.objects.all()
     serializer_class = StudentSerializer
 
+    @csrf_exempt
     def retrieve(self, *args, **kwargs):
         self.serializer_class = StudentResponseSerializer
         return generics.RetrieveUpdateDestroyAPIView.retrieve(self, *args, **kwargs)
+
+    def destroy(self, request, *args, **kwargs):
+        try:
+            instance = self.get_object()
+            self.perform_destroy(instance)
+        except Http404:
+            pass
+        return Response(status=status.HTTP_204_NO_CONTENT)
+

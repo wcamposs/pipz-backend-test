@@ -1,8 +1,10 @@
 from rest_framework import serializers
 from rest_framework import exceptions
-
+#from rest_framework import status
+#from rest_framework.response import Response
 
 from django.contrib.auth import authenticate
+from django.views.decorators.csrf import csrf_exempt
 
 from .models import Student, Teacher
 
@@ -37,12 +39,14 @@ class TeacherSerializer(serializers.Serializer):
     pk = serializers.IntegerField(read_only=True)
     name = serializers.CharField(max_length=60)
 
+    @csrf_exempt
     def create(self, validated_data):
         """
         Create and return a new 'Teacher' instance
         """
         return Teacher.objects.create(**validated_data)
 
+    @csrf_exempt
     def update(self, instance, validated_data):
         """
         Update and return an existing 'Teacher' instance
@@ -63,6 +67,7 @@ class StudentSerializer(serializers.Serializer):
     name = serializers.CharField(max_length=60)
     teacher_id = serializers.IntegerField(required=True)
         
+    @csrf_exempt
     def create(self, validated_data):
         """
         Create and return a new 'Student' instance
@@ -70,6 +75,7 @@ class StudentSerializer(serializers.Serializer):
         student = Student.objects.create(**validated_data)
         return student
 
+    @csrf_exempt
     def update(self, instance, validated_data):
         """
         Update and return an existing 'Student' instance
