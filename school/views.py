@@ -10,7 +10,7 @@ from rest_framework.response import Response
 #from rest_framework import status
 
 from .models import Student, Teacher
-from .serializers import StudentSerializer, TeacherSerializer, LoginSerializer
+from .serializers import StudentSerializer, StudentResponseSerializer, TeacherSerializer, LoginSerializer
 
 # Create your views here.
 
@@ -52,8 +52,11 @@ class ListStudentView(generics.ListCreateAPIView):
     permission_classes = (IsAuthenticated, IsAdminUser)
 
     queryset = Student.objects.all()
-    serializer_class = StudentSerializer
+    serializer_class = StudentResponseSerializer
 
+    def create(self, *args, **kwargs):
+        self.serializer_class = StudentSerializer
+        return generics.ListCreateAPIView.create(self, *args, **kwargs)
 
 class TeacherDetail(generics.RetrieveUpdateDestroyAPIView):
     """
@@ -70,3 +73,7 @@ class StudentDetail(generics.RetrieveUpdateDestroyAPIView):
 
     queryset = Student.objects.all()
     serializer_class = StudentSerializer
+
+    def retrieve(self, *args, **kwargs):
+        self.serializer_class = StudentResponseSerializer
+        return generics.RetrieveUpdateDestroyAPIView.retrieve(self, *args, **kwargs)

@@ -50,25 +50,30 @@ class TeacherSerializer(serializers.Serializer):
         instance.save()
         return instance
 
-class StudentSerializer(serializers.Serializer):
+
+class StudentResponseSerializer(serializers.Serializer):
     pk = serializers.IntegerField(read_only=True)
     name = serializers.CharField(max_length=60)
     teacher = TeacherSerializer(many=False, required=True)
-    
+
+
+class StudentSerializer(serializers.Serializer):
+    pk = serializers.IntegerField(read_only=True)
+    name = serializers.CharField(max_length=60)
+    teacher_id = serializers.IntegerField(required=True)
+        
     def create(self, validated_data):
         """
         Create and return a new 'Student' instance
         """
-        teacher_data = validated_data.pop('teacher')
-        teacher = Teacher.objects.create(**teacher_data)
-        student = Student.objects.create(**validated_data, teacher=teacher)
+        student = Student.objects.create(**validated_data)
         return student
 
     def update(self, instance, validated_data):
         """
         Update and return an existing 'Student' instance
         """
-        teacher_data = validated_data.pop('teacher')
         instance.name = validated_data.get('name', instance.name)
+        instance.teacher_id = validated_data.get('teacher_id', instance.teacher_id)
         instance.save()
         return instance
