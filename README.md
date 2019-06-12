@@ -55,9 +55,9 @@ http://127.0.0.1:8000/admin/
 
 http://127.0.0.1:8000/school/students/
 
-http://127.0.0.1:8000/school/students/1/ #assuming that 1 is the student's private key
+http://127.0.0.1:8000/school/students/1/         #assuming that 1 is the student's private key
 
 http://127.0.0.1:8000/school/teachers/
 
-http://127.0.0.1:8000/school/teachers/1/ #assuming that 1 is the teacher's private key
+http://127.0.0.1:8000/school/teachers/1/         #assuming that 1 is the teacher's private key
 ```
