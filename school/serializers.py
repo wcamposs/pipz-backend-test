@@ -59,12 +59,16 @@ class StudentSerializer(serializers.Serializer):
         """
         Create and return a new 'Student' instance
         """
-        return Student.objects.create(**validated_data)
+        teacher_data = validated_data.pop('teacher')
+        teacher = Teacher.objects.create(**teacher_data)
+        student = Student.objects.create(**validated_data, teacher=teacher)
+        return student
 
     def update(self, instance, validated_data):
         """
         Update and return an existing 'Student' instance
         """
+        teacher_data = validated_data.pop('teacher')
         instance.name = validated_data.get('name', instance.name)
         instance.save()
         return instance
